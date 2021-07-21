@@ -1,0 +1,76 @@
+var demographics = {
+  type: 'survey-text',
+  questions: [
+    {prompt: "For statistical purposes, how old are you? (please type out in years)"},
+    {prompt: "For statistical purposes, What is your gender? (please type out your answer below)"},
+    {prompt: "Were the instructions clear to you? Did you notice anything particular about the task you'd like to comment on? We would appreciate any feedback so we can improve the task in the future. (you can type as much as you want in the box below)"}
+    ],
+  preamble: 'Please answer these questions.',
+  on_start: function(){
+    document.body.style.background = "white"; // white bg for contrast
+  }
+};
+
+var nfc_options = ['Very Strong Disagreement','Strong Disagreement','Moderate Disagreement','Slight Disagreement',
+                'Neither Agreement nor Disagreement','Slight Agreement','Moderate Agreement','Strong Agreement',
+                'Very Strong Agreement'];
+var nfc = {
+        type: 'survey-multi-choice',
+        questions: [
+          {prompt: "I would prefer complex to simple problems.",
+          name: 'nfc1',
+          options: nfc_options, required:true},
+          {prompt: "I like to have the responsibility of handling a situation that requires a lot of thinking.",
+          name: 'nfc2',
+          options: nfc_options, required:true},
+          {prompt: "Thinking is not my idea of fun.",
+          name: 'nfc3',
+          options: nfc_options, required:true},
+          {prompt: "I would rather do something that requires little thought than something that is sure to challenge my thinking abilities.",
+          name: 'nfc4',
+          options: nfc_options, required:true},
+          {prompt: "I try to anticipate and avoid situations where there is likely a chance I will have to think in depth about something.",
+          name: 'nfc5',
+          options: nfc_options, required:true},
+          {prompt: "I find satisfaction in deliberating hard and for long hours.",
+          name: 'nfc6',
+          options: nfc_options, required:true},
+          {prompt: "I only think as hard as I have to.",
+          name: 'nfc7',
+          options: nfc_options, required:true},
+          {prompt: "I prefer to think about small, daily projects to long-term ones.",
+          name: 'nfc8',
+          options: nfc_options, required:true},
+          {prompt: "I like tasks that require little thought once I’ve learned them.",
+          name: 'nfc9',
+          options: nfc_options, required:true},
+          {prompt: "The idea of relying on thought to make my way to the top appeals to me.",
+          name: 'nfc10',
+          options: nfc_options, required:true},
+          {prompt: "I really enjoy a task that involves coming up with new solutions to problems.",
+          name: 'nfc11',
+          options: nfc_options, required:true},
+          {prompt: "Learning new ways to think doesn’t excite me very much.",
+          name: 'nfc12',
+          options: nfc_options, required:true},
+          {prompt: "I prefer my life to be filled with puzzles that I must solve.",
+          name: 'nfc13',
+          options: nfc_options, required:true},
+          {prompt: "The notion of thinking abstractly is appealing to me.",
+          name: 'nfc14',
+          options: nfc_options, required:true},
+          {prompt: "I would prefer a task that is intellectual, difficult, and important to one that is somewhat important but does not require much thought.",
+          name: 'nfc15',
+          options: nfc_options, required:true},
+          {prompt: "I feel relief rather than satisfaction after completing a task that required a lot of mental effort.",
+          name: 'nfc16',
+          options: nfc_options, required:true},
+          {prompt: "It’s enough for me that something gets the job done; I don’t care how or why it works.",
+          name: 'nfc17',
+          options: nfc_options, required:true},
+          {prompt: "I usually end up deliberating about issues even when they do not affect me personally.",
+          name: 'nfc18',
+          options: nfc_options, required:true}
+        ],
+        preamble: 'For the following questions, please respond as honestly as possible and choose the option that best describes you.'
+      };
