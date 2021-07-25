@@ -1,69 +1,34 @@
- # -*- coding: utf-8 -*-
-"""
-code for an N-back with block-wise reward and demand manipulation 
-TLX questions are presented at the end of each block. 
-
-
-For question, contact Sean. 
-seandevine.org
-seandamiandevine@gmail.com
-"""
-
+# Libraries
 from psychopy import visual, core, gui, event, monitors
 from psychopy.visual import ShapeStim, ImageStim
 from psychopy.constants import (NOT_STARTED, STARTED, PLAYING, PAUSED,
                                 STOPPED, FINISHED, PRESSED, RELEASED, FOREVER)
 import numpy as np
-import pandas as pd
 import random
-import pyglet
-import csv
 import os
 import datetime as dt
 import itertools as it
 
-#Set directory
-_thisDir = os.path.dirname(os.path.abspath(__file__))
-os.chdir(_thisDir)
+# My scripts
+from fx.cueChooser import cueChooser
+from fx.addOutput import addOutput, initCSV
 
-#Define functions
-def addOutput(file, output):
-    with open(file, 'a') as data:
-        writer = csv.writer(data)
-        writer.writerow(output)
-
-def cueChooser(cues, pTarget, N):
-    '''
-    Chooses Nback cues based on 1) the available cues, 
-    2) the proportion of cues that must be targets, and 
-    3) the N level
-    '''
-    out=[]
-    nTarget=int(pTarget*len(cues))
-    targIdx=[1]*nTarget+[0]*(len(cues)-N-nTarget)
-    random.shuffle(targIdx)
-    targIdx=[0]*N+targIdx
-    for c in range(len(cues)): 
-        if c < N:
-            out+=random.sample(cues,1)
-        else:
-            targ=out[c-N]
-            if targIdx[c]==1:
-                out.append(targ)
-            else: 
-                noTarg=[i for i in cues if i.lower()!=targ.lower()]
-                out+=random.sample(noTarg,1)
-    return(out)
-
-def runTask(id, sex, age):
-    # setup datafile
+def runTask(id, sex, age, _thisDir):
+    """
+    N-back with block-wise reward and demand manipulation 
+    TLX questions are presented at the end of each block. 
+    
+    
+    For question, contact Sean. 
+    seandevine.org
+    seandamiandevine@gmail.com
+    """
+    # Initialize datafile
     filename = _thisDir + os.sep + 'data/SubjEff_' + id+'_'+str(dt.datetime.now())+'.csv'
-    with open(filename, 'w') as csvFile:
-        writer = csv.writer(csvFile)
-        writer.writerow(['id', 'age', 'sex', 'run', 'block', 'trial', 'N', 'reward', 
+    initCSV(filename, ['id', 'age', 'sex', 'run', 'block', 'trial', 'N', 'reward', 
             'cue', 'isTarget', 'response', 'rt', 'acc', 'tstart', 'tend', 'localCor', 'globalCor',
             'mental', 'temporal', 'performance', 'effort', 'frustration'])
-        # id, age, sex, r+1, b+1, t+1, thisN, thisR, cue.text, isTarget, response, RT, acc, start, end
+
     # Window setup
     win = visual.Window(
         size=[1920, 1080], fullscr=True, screen=0,
@@ -243,7 +208,8 @@ When you are ready, press SPACE to begin!"
                 feedback.draw()
                 win.flip()
                 core.wait(iti)
-                out = [id, age, sex, 'practice', 'NA', t+1, thisN, 'NA', cue.text, isTarget, response, RT, acc, start, end]+['NA']*len(tlxQuestions)
+                out = [id, age, sex, 'practice', 'NA', t+1, thisN, 'NA', cue.text, isTarget, response, RT, acc, start, end, localCor, globalCor]+['NA']*len(tlxQuestions)
+                addOutput(filename, out)
 
     # Instructions B
     for i in instsB: 
@@ -267,7 +233,7 @@ When you are ready, press SPACE to begin!"
             theseCues = cueChooser(cues, pTarget, thisN)
             Ntxt.text = 'N = ' + str(thisN)
             Nreminder.text = 'N = ' + str(thisN)
-            Rtxt.text = 'If you are '+str(localPerf*100)+'% accurate, you can earn\n\n'+str(thisR)+' cents'
+            Rtxt.text = str(thisR)+' cents'
             Ntxt.draw()
             Rtxt.draw()
             win.flip()
@@ -343,14 +309,6 @@ See the experimenter to collect your winnings and for further details.'
     win.flip()
     event.waitKeys(keyList = ['escape'])
 
-# runTask('debug', 0, 0)
 
-def taskStartUp(): 
-    dlgInfo = {'id':"enter subject's id number", 'age':"enter subject's age", 'sex':"enter subject's sex"}
-    dlgBox = gui.DlgFromDict(dictionary=dlgInfo, title='SubjEff Study', order = ['id', 'age', 'sex'])
-    if dlgBox.OK: 
-        runTask(dlgInfo['id'], dlgInfo['sex'], dlgInfo['age'])
-
-taskStartUp()
 
 
