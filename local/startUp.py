@@ -6,7 +6,6 @@ def taskStartUp():
     # Set directory
     _thisDir = os.path.dirname(os.path.abspath(__file__))
     os.chdir(_thisDir)
-    print(_thisDir)
     
     # Open dlg
     dlgInfo = {'id':"enter subject's id number", 'age':"enter subject's age", 'sex':"enter subject's sex"}

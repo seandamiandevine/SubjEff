@@ -1,7 +1,6 @@
 import random
 import itertools as it
 
-
 def cueChooser(cues, pTarget, N):
     '''
     Chooses Nback cues based on 1) the available cues, 

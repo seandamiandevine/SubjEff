@@ -1,15 +1,13 @@
-# Libraries
 from psychopy import visual, core, gui, event, monitors
 from psychopy.visual import ShapeStim, ImageStim
 from psychopy.constants import (NOT_STARTED, STARTED, PLAYING, PAUSED,
-                                STOPPED, FINISHED, PRESSED, RELEASED, FOREVER)
+                               STOPPED, FINISHED, PRESSED, RELEASED, FOREVER)
 import numpy as np
 import random
 import os
 import datetime as dt
 import itertools as it
 
-# My scripts
 from fx.cueChooser import cueChooser
 from fx.addOutput import addOutput, initCSV
 
@@ -40,11 +38,11 @@ def runTask(id, sex, age, _thisDir):
     # Set constants
     textCol = [-1, -1, -1]                   # font colour
     fontH = 1                                # font height
-    numtrials = 12                           # number of trials per block
+    numtrials = 3 if id=='debug' else 12     # number of trials per block
     numprac = 0 if id=='debug' else 1        # number of times subjects practice each N level
     Nlev = [1,2,3]                           # N-back levels
     rewards = [5,50]                         # possible rewards (in CAN cents)
-    numruns = 3                              # number of runs of the full task
+    numruns = 1 if id == 'debug' else 3      # number of runs of the full task
     nblocks = len(Nlev)*len(rewards)         # number of blocks per run
     cues = ['b','B','d','D','g','G','p',     # cues for nBack
             'P','t','T','v','V']
@@ -141,7 +139,7 @@ When you are ready, press SPACE to begin!"
     cue = visual.TextStim(win, text="", height=3*fontH, color=textCol, pos=[0, 0])
     Nreminder = visual.TextStim(win, text="", height=2*fontH, color=textCol, pos=[0, 12])
     feedback = visual.TextStim(win, text="", height=3*fontH, color=textCol, pos=[0, 0])
-    brkTxt = visual.TextStim(win, text="You can take a short break now.\n\nPress SPACE when you are ready to continue.", height=3*fontH, color=textCol, pos=[0, 0])
+    brkTxt = visual.TextStim(win, text="You can take a short break now.\n\nPress SPACE when you are ready to continue.", height=fontH, color=textCol, pos=[0, 0])
     tlxPrompt = visual.TextStim(win, text="", height=fontH, color=textCol, pos=[0, 4], wrapWidth=30)
     tlxScale=visual.RatingScale(win=win, low=0, high=21, precision=1, skipKeys=None,
         marker='circle', markerColor = 'DarkRed',  showValue=False, pos=[0, 0], scale=None, 
@@ -292,18 +290,17 @@ When you are ready, press SPACE to begin!"
             # Store data from this block
             for row in range(len(out)):
                 save = out[row]+thisTLX
-                addOutput(filename, out)
+                addOutput(filename, save)
     
     # Global reward calculation
-    totaltrials = numtrials*nblocks*nruns
+    totaltrials = numtrials*nblocks*numruns
     pCor = globalCor/totaltrials
     if pCor < globalPerf:
         rewardEarned = 0
-    
     # Show end screen
     endScreen.text='Thank you for completing our study!\n\n\
-Throughout the experiment, you were '+str(pCor)+'% accurate.\n\n\
-You earned an additional '+str(rewardEarned)+' dollars.\n\n\
+Throughout the experiment, you were '+str(np.round(pCor*100), 2))+'% accurate.\n\n\
+You earned an additional '+str(np.round(rewardEarned), 2))+' dollars.\n\n\
 See the experimenter to collect your winnings and for further details.'
     endScreen.draw()
     win.flip()
