@@ -22,7 +22,7 @@ def runTask(id, sex, age, _thisDir):
     seandamiandevine@gmail.com
     """
     # Initialize datafile
-    filename = _thisDir + os.sep + 'data/SubjEff_' + id+'_'+str(dt.datetime.now())+'.csv'
+    filename = _thisDir + os.sep + 'data' + os.sep + 'SubjEff_' + id+'_'+str(dt.datetime.now()).replace(':','_')+'.csv'
     initCSV(filename, ['id', 'age', 'sex', 'run', 'block', 'trial', 'N', 'reward', 
             'cue', 'isTarget', 'response', 'rt', 'acc', 'tstart', 'tend', 'localCor', 'globalCor',
             'mental', 'temporal', 'performance', 'effort', 'frustration'])
@@ -46,9 +46,9 @@ def runTask(id, sex, age, _thisDir):
     nblocks = len(Nlev)*len(rewards)         # number of blocks per run
     cues = ['b','B','d','D','g','G','p',     # cues for nBack
             'P','t','T','v','V']
-    choiceKeys = ['a', 'l']                  # keys to make choices
+    choiceKeys = ['A', 'L']                  # keys to make choices
     iti = 0.5                                # time between cues (in s.)
-    respTime = 0.5                           # maximum time to respond to cue (in s.)
+    respTime = 0.75                          # maximum time to respond to cue (in s.)
     cueTime = 2                              # Time for which cues and reward stay on screen (in s.)
     pTarget = 1/3                            # proportion of cues that are target in a block
     localPerf = 0.75                         # required performance within a block 
@@ -92,7 +92,7 @@ Just as you saw on the previous screen, you will see a series of a letters. The 
 Based on the rules you just saw, you have the make the correct response:\n\n\
 '"+choiceKeys[0]+"' when the letter on the screen matches the letter N screens back\n\
 '"+choiceKeys[1]+"' otherwise.\n\n\
-When a letter appears on the screen, make your response.",
+Make your response when a letter appears on the screen.",
 
     "For the practice rounds, we will tell you whether you get each answer right or wrong and you will have unlimited time to respond.\n\n\
 Remember:\n\n\
@@ -121,14 +121,19 @@ Please answer these as honestly as possible.",
     "To recap, four things will be different from the practice round.\n\n\
 First, we will no longer tell you whether you got the right or wrong answer.\n\n\
 Second, you will be under time pressure to respond. The letters will only stay on the screen for a short time. \
-'If you fail to respond within this time, the game will move on and we will count this as a mistake. \
+If you fail to respond within this time, the game will move on and we will count this as a mistake. \
 Try your best to respond as quickly and accurately as possible.\n\n\
 Third, you can now earn real money in the N-back. Pay attention to the reward message at the beginning of each round to know how much that round is worth. \
 Remember, you only get to keep the money that round if you get "+str(localPerf*100)+"% of your answers right that round AND you get "+str(globalPerf*100)+"% of answers right overall.\n\n\
 Finally, after each round, we will now ask you some questions about the round you just played. Please answer these questions honestly.", 
 
-    "If you have ANY questions, stop now and ask the experiment to explain. \n\n\
-When you are ready, press SPACE to begin!"
+    "The experimenter will now ask you a few questions to be sure you understand the instructions.\n\n\
+Turn to them now. Once you have answered all the questions, press SPACE.", 
+
+    "The main phase of the experiment will now start.\n\n\
+Stay sharp! The letters will appear very quickly and you will be under time pressure to respond.\n\n\
+At first, the game may feel very fast, but over time you will get used to it. Do your best to respond as quickly and accurately as possible.\n\n\
+When you're ready to start, press SPACE!"
     ]
     instTxt = visual.TextStim(win=win, text="", pos=(0, 0), height=fontH, wrapWidth=30, ori=0, color=textCol)
 
@@ -189,9 +194,9 @@ When you are ready, press SPACE to begin!"
                 win.flip()
                 core.wait(iti)
                 end=tClock.getTime()
-                if isTarget==1 and response == 'a':
+                if isTarget==1 and response == choiceKeys[0]:
                     acc=1
-                elif isTarget==0 and response == 'l':
+                elif isTarget==0 and response == choiceKeys[1]:
                     acc=1
                 else: 
                     acc=0
@@ -299,8 +304,8 @@ When you are ready, press SPACE to begin!"
         rewardEarned = 0
     # Show end screen
     endScreen.text='Thank you for completing our study!\n\n\
-Throughout the experiment, you were '+str(np.round(pCor*100), 2))+'% accurate.\n\n\
-You earned an additional '+str(np.round(rewardEarned), 2))+' dollars.\n\n\
+Throughout the experiment, you were '+str(np.round(pCor*100,2))+'% accurate.\n\n\
+You earned an additional '+str(np.round(rewardEarned, 2))+' dollars.\n\n\
 See the experimenter to collect your winnings and for further details.'
     endScreen.draw()
     win.flip()
